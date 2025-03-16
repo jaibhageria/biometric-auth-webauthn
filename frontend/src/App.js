@@ -9,20 +9,30 @@ const BiometricAuthForm = () => {
 
   const handleEmailChange = (e) => setEmail(e.target.value);
 
+  // const options = {
+  //   publicKey: {
+  //     rp: { name: "Example Corporation" },
+  //     user: {
+  //       name: email,
+  //       id: new Uint8Array([/* credential ID from the server */]),
+  //       displayName: "Test Account",
+  //       transports: ["internal"],
+  //     },
+  //     pubKeyCredParams: [{ type: "public-key", alg: -7 }],
+  //     challenge: new Uint8Array([/* some challenge data */]),
+  //     authenticatorSelection: { authenticatorAttachment: "platform" },
+  //   },
+  // };
+
   const options = {
     publicKey: {
-      rp: { name: "Example Corporation" },
-      user: {
-        name: email,
-        id: new Uint8Array([/* credential ID from the server */]),
-        displayName: "Test Account",
-        transports: ["internal"],
-      },
-      pubKeyCredParams: [{ type: "public-key", alg: -7 }],
       challenge: new Uint8Array([/* some challenge data */]),
-      authenticatorSelection: { authenticatorAttachment: "platform" },
-    },
-  };
+      // rpId: "http://localhost:3000",
+      allowCredentials: [],
+      mediation: "conditional",
+      userVerification: "required",
+    }
+  }
 
   const authenticateAndSubmit = async () => {
     try {
@@ -30,7 +40,8 @@ const BiometricAuthForm = () => {
         throw new Error("Web Authentication API is not supported on this browser.");
       }
 
-      const credential = await navigator.credentials.create(options);
+      // const credential = await navigator.credentials.create(options);
+      const credential = await navigator.credentials.get(options);
       console.log("Credential:", credential);
       if (credential) {
         setIsAuthenticated(true);
